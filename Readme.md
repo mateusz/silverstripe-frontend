@@ -37,7 +37,7 @@ public function Pages() {
 }
 ```
 
-This provides you with a API call to generate a HTML5 data attributes containing the pagination metadata that the widget can automatically pick up. On the template side add it on the element containing the static pagination control. The optional attribute is the same as for the `PaginationSummary` - it specifies the amount of context to be shown around current page.
+This provides you with an API call to generate a HTML5 data attributes containing the pagination metadata that the widget can automatically pick up. On the template side add it on the element containing the static pagination control. The optional attribute is the same as for the `PaginationSummary` - it specifies the amount of context to be shown around current page.
 
 ```html
 <ul class="pagination" $Pages.PaginationMetadata(2)>
@@ -58,24 +58,48 @@ The dynamic pagination should be now running. You can invoke functions on the wi
 // This will invoke the page fetch, and refresh the pagination control.
 $('ul.pagination').sspagination('setCurrentPage', 2);
 
+// Hook into the sspagination events.
+$('ul.pagination').bind('sspaginationafterpagefetch', function(event) {
+	// Do processing.	
+});
+
 // This uses the item number instead (as opposed to the page), which is how the backend handles the pagination.
 $('ul.pagination').sspagination({pageStart: 2});
 
 // You can also dynamically change page size and the widget will refresh itself accordingly (this does not invoke a fetch).
 $('ul.pagination').sspagination({pageLength: 1});
+
+// Destroy the widget and revert to static navigation.
+$('ul.pagination').sspagination('destroy');
 ```
 
 ### Options
 
 tbd
 
+* `contentSelector`
+* `pageStart`
+* `pageLength`
+* `totalItems`
+* `getParam`
+* `context`
+* `indicatorElement`
+
 ### Methods
 
 tbd
 
-### Hooks
+* `getTotalPages`
+* `getCurrentPage`
+* `setCurrentPage`
+* `destroy`
 
-tbd
+### Events
+
+* `beforepagefetch`: before the AJAX call is made
+* `afterpagefetch`: after a successful fetch & refresh (i.e. after the relevant afterrefresh)
+* `beforerefresh`: before the widget is updated (removed and recreated to fit with the current options)
+* `afterrefresh`: after the widget has been updated
 
 # FAQ
 
