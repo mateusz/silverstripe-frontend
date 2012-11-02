@@ -19,7 +19,8 @@ Not released yet.
 
 ## Features
 
-- provides an sspagination jQuery UI widget that acts as a drop-in replacement for regular pagination.
+- provides a sspagination jQuery UI widget that acts as a drop-in replacement for regular pagination.
+- provides a ssendless widget that adds a Twitter-style rollout pagination. 
 
 # Components
 
@@ -100,6 +101,20 @@ tbd
 * `afterpagefetch`: after a successful fetch & refresh (i.e. after the relevant afterrefresh)
 * `beforerefresh`: before the widget is updated (removed and recreated to fit with the current options)
 * `afterrefresh`: after the widget has been updated
+
+## ssendless (jquery.ss.endless.js)
+
+This widget extends the sspagination (both js files have to be included). It replaces the classical, skip-to-page, pagination with a endless rollout behaviour. Instead of removing the displayed page content it appends the consecutive page at the end, and removes itself from the way if there is no more pages to be displayed. 
+
+The behaviour of dynamic changes to options is unspecified with this widget - i.e. it should be preconfigured on creation.
+
+The widget usage is the same as sspagination:
+
+```js
+$('ul.pagination').ssendless({
+	contentSelector: '.pagination-content',
+	indicatorElement: $('.pagination-indicator')
+});
 
 # FAQ
 
