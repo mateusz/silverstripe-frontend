@@ -1,3 +1,8 @@
+/**
+ * Drop-in replacement for a SilverStripe pagination control.
+ * Provides a dynamic JS AJAX pagination control.
+ */
+
 (function($) {
 	var sspaginationUIDTracker = 0;
 
@@ -63,7 +68,13 @@
 			// Initialise the DOM.
 			this.element.hide();
 			this._refresh();
-			this._bindAll();
+		},
+
+		/**
+		 * Perform the default page switch operation on the DOM.
+		 */
+		_transitionContent: function(content) {
+			this.contentElement.html(content);
 		},
 
 		/**
@@ -81,14 +92,15 @@
 			}
 
 			$.get(document.location+'?'+this.options.getParam+'='+pageStart, function(data) {
-				self.contentElement.html($(data).find(self.options.contentSelector).html());
+				if (self._trigger('ontransition', content)!==false) {
+					self._transitionContent($(data).find(self.options.contentSelector).html());
+				}
 
 				if (self.options.indicatorElement!==null) {
 					self.options.indicatorElement.hide();
 				}
 
 				self._refresh();
-				self._bindAll();
 
 				self._trigger('afterpagefetch');
 			});
@@ -159,10 +171,12 @@
 				'</ul>');
 
 			if (typeof this.widgetEl!=='undefined') {
-				this.widgetEl.unbind('.'+this.uid).remove();
+				this._unbindAll();
+				this.widgetEl.remove();
 			}
 			this.widgetEl = newWidgetEl;
 			this.element.after(this.widgetEl);
+			this._bindAll();
 
 			this._trigger('afterrefresh');
 		},
@@ -206,7 +220,6 @@
 				case 'context':
 					this.options[key] = parseInt(value);
 					this._refresh();
-					this._bindAll();
 					break;
 
 				case 'contentSelector':
@@ -214,7 +227,7 @@
 					this.contentElement = $(this.options.contentSelector);
 					break;
 			}
-			$.Widget.prototype._setOption.apply(this,arguments);
+			$.Widget.prototype._setOption.apply(this, arguments);
 		},
 
 		/**
