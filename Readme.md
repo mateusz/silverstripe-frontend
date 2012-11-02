@@ -115,6 +115,7 @@ $('ul.pagination').ssendless({
 	contentSelector: '.pagination-content',
 	indicatorElement: $('.pagination-indicator')
 });
+```
 
 # FAQ
 
