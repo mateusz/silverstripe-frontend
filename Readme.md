@@ -6,7 +6,8 @@
 
 ## Requirements 
 
-SilverStripe 3 (master)
+* SilverStripe 3 (master)
+* underscore.js (included in the javascript directory)
 
 ## Changelog
 
@@ -19,18 +20,20 @@ Not released yet.
 
 ## Features
 
-- provides a sspagination jQuery UI widget that acts as a drop-in replacement for regular pagination.
-- provides a ssendless widget that adds a Twitter-style rollout pagination. 
+- provides an sspagination jQuery UI widget which acts as a drop-in replacement for regular pagination.
+- provides an ssendless jQuery UI widget which adds a Twitter-style rollout pagination. 
 
 # Components
 
 ## sspagination (jquery.ss.pagination.js)
 
-The widget completely replaces a specified static pagination control with one written in JS. Page changes are handled internally here, without relying on the original markup. Variety of classes are available on the DOM elements for customisation. A couple of hooks have also been provided. 
+The widget completely replaces a specified PHP-driven pagination control with a JS one. The original markup is hidden and not used, and internal underscore templates are used instead. Variety of classes are available on the DOM elements for customisation. A couple of hooks have also been provided. 
 
-For fetching the widget is using a poor man's PJAX - which means it fetches the entire page via AJAX, and then uses jQuery to pick up only the element that needs to be replaced. This could change in the future.
+To fetch pages the widget is using a "poor man's PJAX" - which means it fetches the entire page via AJAX, and then uses jQuery to pick up only the element that needs to be replaced. The upside is we don't need to write any extra PHP controller handlers, the downside is we are rendering entire page on each request. If you wish to speed it up, detect the AJAX request and provide just the necessary content snippet.
 
-The widget relies on the pagination metadata to be passed on from the backend. The easiest way to achieve that is to use the `AjaPaginatedList` as a wrapper for the DataList.
+### Including pagination metadata
+
+The widget relies on the pagination metadata to be supplied during creation. This can be done via normal jQuery UI option mechanism, but the easiest way to achieve that is to use the `AjaPaginatedList` as a wrapper for the DataList.
 
 ```php
 public function Pages() {
@@ -38,13 +41,15 @@ public function Pages() {
 }
 ```
 
-This provides you with an API call to generate a HTML5 data attributes containing the pagination metadata that the widget can automatically pick up. On the template side add it on the element containing the static pagination control. The optional attribute is the same as for the `PaginationSummary` - it specifies the amount of context to be shown around current page.
+This provides you with an API call to generate HTML5 data attributes containing the pagination metadata that the widget can automatically pick up. On the template side add it to the element containing the static pagination control. The optional attribute is the same as for the `PaginationSummary` - it specifies the amount of context to be shown around current page.
 
 ```html
 <ul class="pagination" $Pages.PaginationMetadata(2)>
 ```
 
-Apply the widget on the frontend by at minimum specifying the `contentSelector` option. This is a selector that will be used to find the content element to replace, and also to find the relevant piece of the content received via a regular AJAX call. Also specify the spinner (an indicator) that will automatically be shown when the pages are loading.
+### Applying and configuring the widget
+
+Apply the widget on the frontend by at minimum specifying the `contentSelector` option. This is a selector that will be used to find the content element to replace, and also to find the relevant piece of the content received via a regular AJAX call. Also specify the spinner (an indicator) that will automatically be shown when the pages are loading. You should add this indicator element yourself, and hide it with CSS, so it doesn't appear if JS is broken/disabled.
 
 ```js
 $('ul.pagination').sspagination({
@@ -53,7 +58,9 @@ $('ul.pagination').sspagination({
 });
 ```
 
-The dynamic pagination should be now running. You can invoke functions on the widget in the usual jQuery UI way:
+The dynamic pagination should now be running.
+
+You can invoke functions on the widget in the usual jQuery UI way:
 
 ```js
 // This will invoke the page fetch, and refresh the pagination control.
@@ -74,9 +81,21 @@ $('ul.pagination').sspagination({pageLength: 1});
 $('ul.pagination').sspagination('destroy');
 ```
 
-### Options
+### Template customisation
 
-tbd
+The widget DOM is built up from parametrised underscore.js templates. You can redefine them to get a custom layout:
+
+```js
+	$('ul.pagination').sspagination({
+		templates: {
+			abbrev: '<li class="ss-pagination-abbrev my-custom-abbrev-class">…</li>'
+		}
+	});
+```
+
+To see available templates (and the defaults), have a look at the top of the source file.
+
+### Options
 
 * `contentSelector`
 * `pageStart`
@@ -88,8 +107,6 @@ tbd
 
 ### Methods
 
-tbd
-
 * `getTotalPages`
 * `getCurrentPage`
 * `setCurrentPage`
@@ -97,10 +114,11 @@ tbd
 
 ### Events
 
-* `beforepagefetch`: before the AJAX call is made
+* `beforepagefetch`: before the AJAX call is made. Return false to prevent fetching.
 * `afterpagefetch`: after a successful fetch & refresh (i.e. after the relevant afterrefresh)
-* `beforerefresh`: before the widget is updated (removed and recreated to fit with the current options)
-* `afterrefresh`: after the widget has been updated
+* `beforerefresh`: before the widget is updated (removed and recreated to fit with the current options). Return false to prevent refreshing.
+* `afterrefresh`: after the widget has been updated.
+* `ontransition`: called just before the pagination-content element is about to be manipulated. Return false to prevent default behaviour.
 
 ## ssendless (jquery.ss.endless.js)
 
@@ -108,7 +126,7 @@ This widget extends the sspagination (both js files have to be included). It rep
 
 The behaviour of dynamic changes to options is unspecified with this widget - i.e. it should be preconfigured on creation.
 
-The widget usage is the same as sspagination:
+The widget usage is similar to sspagination:
 
 ```js
 $('ul.pagination').ssendless({
@@ -123,4 +141,5 @@ Nothing yet.
 
 # Dev notes
 
-Nothing yet.
+* template parametrisation currently works on creation only. This is because setting deeply nested options replaces the exisiting structures.
+

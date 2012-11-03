@@ -16,7 +16,31 @@
 			getParam: null,
 			context: null,
 			indicatorElement: null,
-			transitionMethod: 'replace'
+			transitionMethod: 'replace',
+			templates: {
+				main:
+					'<ul class="ss-pagination"><%= inside %></ul>',
+				prev: 
+					'<% if (active) { %>'+
+						'<li class="ss-pagination-prev ss-pagination-active"><a href="#" data-page-number="<%= page %>"">Previous</a></li>'+
+					'<% } else { %>'+
+						'<li class="ss-pagination-prev">Previous</li>'+
+					'<% } %>',
+				next:
+					'<% if (active) { %>'+
+						'<li class="ss-pagination-next ss-pagination-active"><a href="#" data-page-number="<%= page %>">Next</a></li>'+
+					'<% } else { %>'+
+						'<li class="ss-pagination-next">Next</li>'+
+					'<% } %>',
+				page: 
+					'<% if (current) { %>'+
+						'<li class="ss-pagination-page ss-pagination-current"><%= page %></li>'+
+					'<% } else { %>'+
+						'<li class="ss-pagination-page ss-pagination-active"><a href="#" data-page-number="<%= page %>"><%= page %></a></li>'+
+					'<% } %>',
+				abbrev:
+					'<li class="ss-pagination-abbrev">…</li>'
+			}
 		},
 
 		/**
@@ -127,48 +151,31 @@
 			var pagesPart = '';
 			for (pageNumber = 1; pageNumber<=totalPages; pageNumber++) {
 				if (pageNumber==1 || (pageNumber>=rangeLeft && pageNumber<=rangeRight) || pageNumber===totalPages) {
-					// Show first, last, and in-range pages.
-					if (pageNumber===currentPage) {
-						pagesPart += '<li class="ss-pagination-page ss-pagination-current">'+pageNumber+'</li>';
-					}
-					else {
-						pagesPart += '<li class="ss-pagination-page ss-pagination-active"><a href="#" data-page-number="'+pageNumber+'">'+pageNumber+'</a></li>';
-					}
+					// Process first, last, and in-range pages.
+					pagesPart += _.template(this.options.templates.page, {page: pageNumber, current: pageNumber===currentPage});
+
 					// Reset the ellipsis tracker.
 					abbrevShown = false;
 				}
 				else {
 					// Show the abbreviation (...), but only once per empty block.
 					if (!abbrevShown) {
-						pagesPart += '<li class="ss-pagination-abbrev">...</li>';
+						pagesPart += _.template(this.options.templates.abbrev, {});
 						abbrevShown = true;
 					}
 				}
 			}
 
 			// Build prev/next parts.
-			var prevPart;
-			if (currentPage!==1) {
-				prevPart = '<li class="ss-pagination-prev ss-pagination-active"><a href="#" data-page-number="'+(currentPage-1)+'"">Previous</a></li>';
-			}
-			else {
-				prevPart = '<li class="ss-pagination-prev">Previous</li>';
-			}
-			var nextPart;
-			if (currentPage!==totalPages) {
-				nextPart = '<li class="ss-pagination-next ss-pagination-active"><a href="#" data-page-number="'+(currentPage+1)+'">Next</a></li>';
-			}
-			else {
-				nextPart = '<li class="ss-pagination-next">Next</li>';
-			}
+			var prevPart = _.template(this.options.templates.prev, {page: currentPage-1, active: currentPage!==1});
+			var nextPart = _.template(this.options.templates.next, {page: currentPage+1, active: currentPage!==totalPages});
 
-			// Replace the existing widget/static pagination.
+			// Replace the existing widget/static pagination with the content built on top of the main template:
 			var newWidgetEl = $(
-				'<ul class="ss-pagination">'+
-					prevPart+
-					pagesPart+
-					nextPart+
-				'</ul>');
+				_.template(this.options.templates.main, {
+					inside: prevPart+pagesPart+nextPart
+				})
+			);
 
 			if (typeof this.widgetEl!=='undefined') {
 				this._unbindAll();
@@ -209,25 +216,24 @@
 		 * Dynamically react to option changes.
 		 */
 		_setOption: function(key, value) {
+			$.Widget.prototype._setOption.apply(this, arguments);
+
 			switch(key) {
 				// Trigger new refresh of the pagination control on size changes.
 				case 'pageStart':
-					this.options[key] = parseInt(value);
 					this._fetch(value);
 					break;
 				case 'pageLength':
 				case 'totalItems':
 				case 'context':
-					this.options[key] = parseInt(value);
+				case 'templates':
 					this._refresh();
 					break;
 
 				case 'contentSelector':
-					this.options[key] = parseInt(value);
 					this.contentElement = $(this.options.contentSelector);
 					break;
 			}
-			$.Widget.prototype._setOption.apply(this, arguments);
 		},
 
 		/**

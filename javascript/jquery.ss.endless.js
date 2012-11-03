@@ -11,6 +11,15 @@
 
 	$.widget("ss.ssendless", $.ss.sspagination, {
 
+		options: {
+			templates: {
+				main:
+					'<div class="ss-pagination">'+
+						'<a href="#" data-page-number="<%= nextPage %>">More</a>'+
+					'</div>'
+			}
+		},
+
 		/**
 		 * Replace the original replacement with an append.
 		 */
@@ -31,13 +40,11 @@
 			if (currentPage<totalPages) {
 				// Widget should be present.
 				if (typeof this.widgetEl==='undefined') {
-					// Create
-					var newWidgetEl = $(
-						'<div class="ss-pagination">'+
-							'<a href="#" data-page-number="'+(currentPage+1)+'">More</a>'+
-						'</div>'
-					);
-					this.widgetEl = newWidgetEl;
+					// Create from template.
+					this.widgetEl = $(_.template(
+						this.options.templates.main, 
+						{nextPage: currentPage+1}
+					));
 					this.element.after(this.widgetEl);
 					this._bindAll();
 				}
