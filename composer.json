@@ -1,0 +1,17 @@
+{
+	"name": "silverstripe/frontend",
+	"description": "Provides frontend widgets that nicely integrate with a SilverStripe site.",
+	"type": "silverstripe-module",
+	"keywords": ["silverstripe","frontend","widgets"],
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Mateusz Uzdowski",
+			"email": "mateusz@silverstripe.com"
+		}
+	],
+	"require":
+	{
+		"silverstripe/framework": "3.*"
+	}
+}
