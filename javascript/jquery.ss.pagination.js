@@ -116,7 +116,7 @@
 			}
 
 			$.get(document.location+'?'+this.options.getParam+'='+pageStart, function(data) {
-				if (self._trigger('ontransition', content)!==false) {
+				if (self._trigger('ontransition', data)!==false) {
 					self._transitionContent($(data).find(self.options.contentSelector).html());
 				}
 
