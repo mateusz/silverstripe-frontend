@@ -115,7 +115,12 @@
 				this.options.indicatorElement.show();
 			}
 
-			$.get(document.location+'?'+this.options.getParam+'='+pageStart, function(data) {
+			if (typeof $.path.addSearchParams==='undefined') {
+				throw "ss.pagination error: please include framework/admin/javascript/lib.js";
+			}
+
+			var url = $.path.addSearchParams(document.location.href, this.options.getParam + "=" + pageStart);
+			$.get(url, function(data) {
 				if (self._trigger('ontransition', data)!==false) {
 					self._transitionContent($(data).find(self.options.contentSelector).html());
 				}

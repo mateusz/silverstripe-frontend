@@ -8,6 +8,7 @@
 
 * SilverStripe 3 (master)
 * underscore.js (included in the javascript directory)
+* lib.js (include `framework/admin/javascript/lib.js` via template or `Requiremenets`)
 
 ## Changelog
 
