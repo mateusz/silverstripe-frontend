@@ -55,7 +55,15 @@ current page.
 
 ```html
 <ul class="pagination" $Pages.PaginationMetadata(2)>
+	// Static pagination follows.
+</ul>
 ```
+
+It doesn't matter what is the structure of the static pagination markup. The widget will completely replace it using
+it's own format for the pagination, based on the data attributes provided via the `Pages.PaginationMetadata` (the format
+can be changed - see "Template customisation" below).
+
+A more comprehensive example of usage can be found in the [sspagination how-to](docs/sspagination-how-to.md).
 
 ### Applying and configuring the widget
 
