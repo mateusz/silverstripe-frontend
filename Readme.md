@@ -1,10 +1,10 @@
 # SilverStripe frontend
 
-## Maintainer 
+## Maintainer
 
 [Mateusz Uzdowski](mailto:mateusz@silverstripe.com)
 
-## Requirements 
+## Requirements
 
 * SilverStripe 3
 * jQuery
@@ -14,12 +14,20 @@
 
 ## Changelog
 
-Not released yet.
+### Next
+
+* Redirect to error page on AJAX HTTP failure.
+* Integration with the document.location - add pushState support.
+* Fix exception for missing lib.js.
+* Added `docs/sspagination-how-to.md`.
+
+### 0.1
+
+* First release including sspagination and ssendless widgets.
 
 ## Installation
 
-1. Include the module folder in your project root folder and rename it to "frontend"
-1. Flush the manifest (?flush=1)
+Use composer (add `"silverstripe/frontend": "*"` to "require" section of your `composer.json`, run `composer update`).
 
 ## Features
 
