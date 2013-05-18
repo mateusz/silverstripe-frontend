@@ -115,7 +115,7 @@
 				this.options.indicatorElement.show();
 			}
 
-			if (typeof $.path.addSearchParams==='undefined') {
+			if (typeof $.path==='undefined' || typeof $.path.addSearchParams==='undefined') {
 				throw "ss.pagination error: please include framework/admin/javascript/lib.js";
 			}
 
