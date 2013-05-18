@@ -6,15 +6,17 @@
 
 ## Requirements 
 
-* SilverStripe 3 (master)
-* underscore.js (included in the javascript directory)
-* lib.js (include `framework/admin/javascript/lib.js` via template or `Requiremenets`)
+* SilverStripe 3
+* jQuery
+* jQuery UI
+* underscore.js (include `frontend/javascript/underscore.js`)
+* lib.js (include `framework/admin/javascript/lib.js`)
 
 ## Changelog
 
 Not released yet.
 
-## Installation 
+## Installation
 
 1. Include the module folder in your project root folder and rename it to "frontend"
 1. Flush the manifest (?flush=1)
@@ -49,9 +51,9 @@ public function Pages() {
 ```
 
 This provides you with an API call to generate HTML5 data attributes containing the pagination metadata that the widget
-can automatically pick up. On the template side add it to the element containing the static pagination control. The
-optional attribute is the same as for the `PaginationSummary` - it specifies the amount of context to be shown around
-current page.
+can automatically pick up. On the template side add it to the element containing the [static pagination
+control](http://doc.silverstripe.org/framework/en/howto/pagination). The optional attribute is the same as for the
+`PaginationSummary` - it specifies the amount of context to be shown around current page.
 
 ```html
 <ul class="pagination" $Pages.PaginationMetadata(2)>
@@ -61,7 +63,8 @@ current page.
 
 It doesn't matter what is the structure of the static pagination markup. The widget will completely replace it using
 it's own format for the pagination, based on the data attributes provided via the `Pages.PaginationMetadata` (the format
-can be changed - see "Template customisation" below).
+can be changed - see "Template customisation" below). The static pagination is included as a fallback mechanism for non
+JS enabled clients.
 
 A more comprehensive example of usage can be found in the [sspagination how-to](docs/sspagination-how-to.md).
 
