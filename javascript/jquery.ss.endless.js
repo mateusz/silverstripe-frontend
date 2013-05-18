@@ -21,9 +21,9 @@
 		},
 
 		/**
-		 * Replace the original replacement with an append.
+		 * Append instead of replace. Do not add a history state - not meaningful in this case.
 		 */
-		_transitionContent: function(content) {
+		_transition: function(url, content) {
 			this.contentElement.append(content);
 		},
 

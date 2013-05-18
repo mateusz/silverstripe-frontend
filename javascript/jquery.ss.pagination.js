@@ -95,10 +95,39 @@
 		},
 
 		/**
-		 * Perform the default page switch operation on the DOM.
+		 * Perform page switch operation. The new content is represented by the "url".
 		 */
-		_transitionContent: function(content) {
+		_transition: function(url, content) {
 			this.contentElement.html(content);
+
+			// Add history state.
+			if (typeof window.history!=='undefined' && typeof window.history.pushState!=='undefined') {
+				window.history.pushState('', '', url);
+			}
+		},
+
+		/**
+		 * Generate the URL from the existing document.location. Replace or inject getParam as needed.
+		 */
+		_createNewUrl: function(pageStart) {
+			if (typeof $.path==='undefined' || typeof $.path.parseUrl==='undefined') {
+				throw "ss.pagination error: please include framework/admin/javascript/lib.js";
+			}
+
+			var parsedUrl = $.path.parseUrl(document.location.href),
+				search = parsedUrl.search || "?",
+				// Match against URL page start parameter.
+				re = new RegExp('([\?&]'+this.options.getParam+')=[^&#]*');
+
+			if (search.match(re)) {
+				// Replace existing string.
+				search = search.replace(re, "$1=" + pageStart);
+				return parsedUrl.hrefNoSearch + search + (parsedUrl.hash || "");
+			} else {
+				// Append.
+				return parsedUrl.hrefNoSearch + search + (search.charAt(search.length-1) !== "?" ? "&" : "" ) +
+					this.options.getParam + "=" + pageStart + (parsedUrl.hash || "");
+			}
 		},
 
 		/**
@@ -115,14 +144,10 @@
 				this.options.indicatorElement.show();
 			}
 
-			if (typeof $.path==='undefined' || typeof $.path.addSearchParams==='undefined') {
-				throw "ss.pagination error: please include framework/admin/javascript/lib.js";
-			}
-
-			var url = $.path.addSearchParams(document.location.href, this.options.getParam + "=" + pageStart);
+			var url = this._createNewUrl(pageStart);
 			$.get(url, function(data) {
 				if (self._trigger('ontransition', data)!==false) {
-					self._transitionContent($(data).find(self.options.contentSelector).html());
+					self._transition(url, $(data).find(self.options.contentSelector).html());
 				}
 
 				if (self.options.indicatorElement!==null) {
