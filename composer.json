@@ -1,5 +1,5 @@
 {
-	"name": "silverstripe/frontend",
+	"name": "mateusz/frontend",
 	"description": "Provides frontend widgets that nicely integrate with a SilverStripe site.",
 	"type": "silverstripe-module",
 	"keywords": ["silverstripe","frontend","widgets"],
@@ -10,8 +10,10 @@
 			"email": "mateusz@silverstripe.com"
 		}
 	],
-	"require":
-	{
+	"require": {
 		"silverstripe/framework": "3.*"
+	},
+	"replace": {
+		"silverstripe/frontend": "*"
 	}
 }
