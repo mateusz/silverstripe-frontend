@@ -116,3 +116,7 @@ pagination page the widget will update itself, show the `.pagination-indicator`,
 One current caveat is the response is being delivered as a full page render - and then the appropriate content is
 cherry-picked. This is not very efficient, but is the only behaviour available at the moment- adding PJAX should sort
 this out ([issue on GitHub](https://github.com/mateusz/silverstripe-frontend/issues/7)).
+
+## Next
+
+* Setting up PJAX fetching for faster fetches: [PJAX How-to](../docs/pjax-how-to.md)
