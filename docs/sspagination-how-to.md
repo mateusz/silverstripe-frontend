@@ -10,24 +10,23 @@ might look like:
 <?php
 
 class Page extends SiteTree {
+	...
+}
+
+class Page_Controller extends ContentController {
+
 	public function PaginatedPages() {
 
-		// By default sspagination uses 'start' GET parameter to select the page.
-		// This is the same as the default SilverStripe installation.
-		$start = isset($_GET['start']) ? (int) $_GET['start'] : 0;
-
 		// The wrapper provides data attributes to the template taken from the DataQuery.
-		$paginatedList = new AjaxPaginatedList(Page::get());
+		$paginatedList = new AjaxPaginatedList(Page::get(), $this->request);
 
 		// We need to set some options so the data attributes can be set.
 		$paginatedList->setPageLength(5);
 		$paginatedList->setPageStart($start);
 
 		return $paginatedList;
-	}
-}
 
-class Page_Controller extends ContentController {
+	}
 
 }
 ```

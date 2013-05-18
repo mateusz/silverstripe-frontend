@@ -14,13 +14,14 @@
 			pageLength: null,
 			totalItems: null,
 			getParam: null,
+			pjaxHeader: null,
 			context: null,
 			indicatorElement: null,
 			transitionMethod: 'replace',
 			templates: {
 				main:
 					'<ul class="ss-pagination"><%= inside %></ul>',
-				prev: 
+				prev:
 					'<% if (active) { %>'+
 						'<li class="ss-pagination-prev ss-pagination-active"><a href="#" data-page-number="<%= page %>"">Previous</a></li>'+
 					'<% } else { %>'+
@@ -32,7 +33,7 @@
 					'<% } else { %>'+
 						'<li class="ss-pagination-next">Next</li>'+
 					'<% } %>',
-				page: 
+				page:
 					'<% if (current) { %>'+
 						'<li class="ss-pagination-page ss-pagination-current"><%= page %></li>'+
 					'<% } else { %>'+
@@ -74,6 +75,10 @@
 			if (this.options.totalItems===null) this.options.totalItems = this.element.data('total-items');
 			if (this.options.getParam===null) this.options.getParam = this.element.data('get-param');
 			if (this.options.context===null) this.options.context = this.element.data('context');
+
+			if (this.options.pjaxHeader===null && this.element.data('pjax-header')) {
+				this.options.pjaxHeader = this.element.data('pjax-header');
+			}
 
 			// Config validation
 			if (this.options.pageStart===null) throw "ss.pagination error: pageStart not set";
@@ -150,10 +155,21 @@
 			}
 
 			var url = this._createNewUrl(pageStart);
-			$.get(url)
-				.done(function(data) {
+			$.ajax({
+				headers: {"X-Pjax" : this.options.pjaxHeader},
+				url: url,
+				success: function(data) {
 					if (self._trigger('ontransition', data)!==false) {
-						self._transition(url, $(data).find(self.options.contentSelector).html());
+
+						if (self.options.pjaxHeader!==null) {
+							// PJAX enabled - content snippet supplied directly as JSON.
+							var snippet = data[self.options.pjaxHeader];
+						} else {
+							// Entire page has been provided. Find the relevant DOM content for substitution.
+							var snippet = $(data).find(self.options.contentSelector).html();
+						}
+
+						self._transition(url, snippet);
 					}
 
 					if (self.options.indicatorElement!==null) {
@@ -163,10 +179,12 @@
 					self._refresh();
 
 					self._trigger('afterpagefetch');
-				}).fail(function(data) {
+				},
+				error: function(data) {
 					// Redirect to failing page so the full error can be shown.
 					document.location.href = url;
-				});
+				}
+			});
 		},
 
 		/**

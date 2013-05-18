@@ -16,6 +16,7 @@
 
 ### Next
 
+* Add PJAX support to AJAX fetches.
 * Redirect to error page on AJAX HTTP failure.
 * Integration with the document.location - add pushState support.
 * Fix exception for missing lib.js.
@@ -42,10 +43,20 @@ The widget completely replaces a specified PHP-driven pagination control with a 
 and not used, and internal underscore templates are used instead. Variety of classes are available on the DOM elements
 for customisation. A couple of hooks have also been provided. 
 
-To fetch pages the widget is using a "poor man's PJAX" - which means it fetches the entire page via AJAX, and then uses
-jQuery to pick up only the element that needs to be replaced. The upside is we don't need to write any extra PHP
-controller handlers, the downside is we are rendering entire page on each request. If you wish to speed it up, detect
-the AJAX request and provide just the necessary content snippet.
+### Note on AJAX/PJAX
+
+By default the widget is using a "poor man's PJAX" - which means it fetches the entire page via AJAX, and then uses
+jQuery to pick up only the element that needs to be replaced. This is perfect in two situations:
+
+* A quick job that doesn't involve modifying a lot of PHP code.
+* Using static publisher for fetching pre-rendered HTML content.
+
+The downside for the dynamic scenario is that we are rendering entire pages which is slower as we are invoking entire
+stack.
+
+If the speed (or server load) is of concern, it's easy to enable PJAX fetching. PJAX will ensure just the required
+snippet is rendered and server via JSON. See the [PJAX how-to](docs/pjax-how-to.md) for details.
+
 
 ### Including pagination metadata
 
