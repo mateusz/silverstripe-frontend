@@ -89,6 +89,11 @@
 			this.contentElement = $(this.options.contentSelector);
 			if (!this.options.contentSelector || !this.contentElement.length) throw "ss.pagination error: content element not found - invalid contentSelector?";
 
+			// Hide loading indicator.
+			if (this.options.indicatorElement!==null) {
+				this.options.indicatorElement.hide();
+			}
+
 			// Initialise the DOM.
 			this.element.hide();
 			this._refresh();
