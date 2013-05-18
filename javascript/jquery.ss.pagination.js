@@ -150,19 +150,23 @@
 			}
 
 			var url = this._createNewUrl(pageStart);
-			$.get(url, function(data) {
-				if (self._trigger('ontransition', data)!==false) {
-					self._transition(url, $(data).find(self.options.contentSelector).html());
-				}
+			$.get(url)
+				.done(function(data) {
+					if (self._trigger('ontransition', data)!==false) {
+						self._transition(url, $(data).find(self.options.contentSelector).html());
+					}
 
-				if (self.options.indicatorElement!==null) {
-					self.options.indicatorElement.hide();
-				}
+					if (self.options.indicatorElement!==null) {
+						self.options.indicatorElement.hide();
+					}
 
-				self._refresh();
+					self._refresh();
 
-				self._trigger('afterpagefetch');
-			});
+					self._trigger('afterpagefetch');
+				}).fail(function(data) {
+					// Redirect to failing page so the full error can be shown.
+					document.location.href = url;
+				});
 		},
 
 		/**
