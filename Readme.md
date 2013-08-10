@@ -75,9 +75,9 @@ control](http://doc.silverstripe.org/framework/en/howto/pagination). The optiona
 `PaginationSummary` - it specifies the amount of context to be shown around current page.
 
 ```html
-<ul class="pagination" $Pages.PaginationMetadata(2)>
+<div class="pagination" $Pages.PaginationMetadata(2)>
 	// Static pagination follows.
-</ul>
+</div>
 ```
 
 It doesn't matter what is the structure of the static pagination markup. The widget will completely replace it using
@@ -95,7 +95,7 @@ AJAX call. Also specify the spinner (an indicator) that will automatically be sh
 should add this indicator element yourself, and hide it with CSS, so it doesn't appear if JS is broken/disabled.
 
 ```js
-$('ul.pagination').sspagination({
+$('div.pagination').sspagination({
 	contentSelector: '.pagination-content',
 	indicatorElement: $('.pagination-indicator')
 });
@@ -107,21 +107,21 @@ You can invoke functions on the widget in the usual jQuery UI way:
 
 ```js
 // This will invoke the page fetch, and refresh the pagination control.
-$('ul.pagination').sspagination('setCurrentPage', 2);
+$('div.pagination').sspagination('setCurrentPage', 2);
 
 // Hook into the sspagination events.
-$('ul.pagination').bind('sspaginationafterpagefetch', function(event) {
+$('div.pagination').bind('sspaginationafterpagefetch', function(event) {
 	// Do processing.
 });
 
 // This uses the item number instead (as opposed to the page), which is how the backend handles the pagination.
-$('ul.pagination').sspagination({pageStart: 2});
+$('div.pagination').sspagination({pageStart: 2});
 
 // You can also dynamically change page size and the widget will refresh itself accordingly (this does not invoke a fetch).
-$('ul.pagination').sspagination({pageLength: 1});
+$('div.pagination').sspagination({pageLength: 1});
 
 // Destroy the widget and revert to static navigation.
-$('ul.pagination').sspagination('destroy');
+$('div.pagination').sspagination('destroy');
 ```
 
 ### Template customisation
@@ -129,7 +129,7 @@ $('ul.pagination').sspagination('destroy');
 The widget DOM is built up from parametrised underscore.js templates. You can redefine them to get a custom layout:
 
 ```js
-	$('ul.pagination').sspagination({
+	$('div.pagination').sspagination({
 		templates: {
 			abbrev: '<li class="ss-pagination-abbrev my-custom-abbrev-class">…</li>'
 		}
@@ -177,7 +177,7 @@ creation.
 The widget usage is similar to sspagination:
 
 ```js
-$('ul.pagination').ssendless({
+$('div.pagination').ssendless({
 	contentSelector: '.pagination-content',
 	indicatorElement: $('.pagination-indicator')
 });

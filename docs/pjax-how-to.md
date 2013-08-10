@@ -46,7 +46,7 @@ class Page_Controller extends ContentController {
 	/**
 	 * Override default handler.
 	 */
-	public function index($request) {
+	public function index() {
 		$controller = $this;
 
 		$responseNegotiator = new PjaxResponseNegotiator(
@@ -58,7 +58,7 @@ class Page_Controller extends ContentController {
 			$this->response
 		);
 
-		return $responseNegotiator->respond($request);
+		return $responseNegotiator->respond($this->request);
 	}
 ```
 
