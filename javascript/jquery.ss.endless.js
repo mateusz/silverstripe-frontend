@@ -21,9 +21,23 @@
 		},
 
 		/**
+		 * Do nothing on popstate.
+		 */
+		_onPopstate: function(evt) {
+			return false;
+		},
+
+		/**
+		 * Do not push state.
+		 */
+		_onPushstate: function(url, fromPopstate) {
+			return false;
+		},
+
+		/**
 		 * Append instead of replace. Do not add a history state - not meaningful in this case.
 		 */
-		_transition: function(url, content) {
+		_transition: function(pageStart, content) {
 			this.contentElement.append(content);
 		},
 

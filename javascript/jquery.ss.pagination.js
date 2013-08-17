@@ -90,6 +90,11 @@
 			// Set the uid for use with specific elements.
 			this.uid = 'sspagination'+sspaginationUIDTracker++;
 
+			// Install popstate
+			if (typeof window.history!=='undefined') {
+				$(window).on("popstate.sspagination", {self: this}, this._onPopstate);
+			}
+
 			// Get the content via selector.
 			this.contentElement = $(this.options.contentSelector);
 			if (!this.options.contentSelector || !this.contentElement.length) throw "ss.pagination error: content element not found - invalid contentSelector?";
@@ -105,14 +110,54 @@
 		},
 
 		/**
+		 * React to HTML5 history transition.
+		 */
+		_onPopstate: function(evt) {
+			var self = evt.data.self;
+
+			// Call the _fetch directly so we can let it know this is a popstate.
+			var pageStart = self._getPageStartFromUrl.apply(self);
+			self.options.pageStart = pageStart;
+			self._fetch(pageStart, true);
+		},
+
+		/**
+		 * React to internal pushstate.
+		 */
+		_onPushstate: function(url, fromPopstate) {
+			// Add history state only if navigating to a new page.
+			if (!fromPopstate) {
+				if (typeof window.history!=='undefined' && typeof window.history.pushState!=='undefined') {
+					window.history.pushState('', '', url);
+				}
+			}
+		},
+
+		/**
 		 * Perform page switch operation. The new content is represented by the "url".
 		 */
-		_transition: function(url, content) {
+		_transition: function(pageStart, content) {
 			this.contentElement.html(content);
+		},
 
-			// Add history state.
-			if (typeof window.history!=='undefined' && typeof window.history.pushState!=='undefined') {
-				window.history.pushState('', '', url);
+		/**
+		 * Helper to extract the current page start from the url.
+		 */
+		_getPageStartFromUrl: function() {
+			if (typeof $.path==='undefined' || typeof $.path.parseUrl==='undefined') {
+				throw "ss.pagination error: please include framework/admin/javascript/lib.js";
+			}
+
+			var parsedUrl = $.path.parseUrl(document.location.href),
+				search = parsedUrl.search || "?",
+				// Match against URL page start parameter.
+				re = new RegExp('[\?&]'+this.options.getParam+'=([^&#]*)');
+
+			var match = search.match(re);
+			if (match!==null && typeof match[1]!=='undefined') {
+				return parseInt(match[1]);
+			} else {
+				return 0;
 			}
 		},
 
@@ -145,7 +190,7 @@
 		 * We are only interested in the content element, so we peel the rest
 		 * off via the contentSelector.
 		 */
-		_fetch: function(pageStart) {
+		_fetch: function(pageStart, fromPopstate = false) {
 			var self = this;
 
 			if (this._trigger('beforepagefetch')===false) return;
@@ -169,7 +214,8 @@
 							var snippet = $(data).find(self.options.contentSelector).html();
 						}
 
-						self._transition(url, snippet);
+						self._transition(pageStart, snippet);
+						self._onPushstate(url, fromPopstate);
 					}
 
 					if (self.options.indicatorElement!==null) {
@@ -300,6 +346,8 @@
 			this._unbindAll();
 			this.widgetEl.remove();
 			this.element.show();
+
+			$(window).unbind(".sspagination");
 
 			$.Widget.prototype.destroy.call(this);
 		}
