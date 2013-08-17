@@ -1,5 +1,38 @@
 # SilverStripe frontend
 
+## tl;dr
+
+Enable AJAX pagination in SilverStripe in three easy steps!
+
+* Step 1: wrap your `DataList` with a list decorator:
+
+	```php
+	$pages = new AjaxPaginatedList(Page::get(), $this->request);
+	```
+
+* Step 2a: add pagination metadata markup into your template:
+
+	```html
+	<div class='pagination" $Pages.PaginationMetadata(2)>
+	```
+
+* Step 2b: prepare the target area for page content in the template:
+
+	```html
+	<div class='pagination-content'></div>
+	```
+
+* Step 3: apply the widget (assuming the requirements for the JavaScript libraries are met):
+
+	```js
+	$('div.pagination').sspagination({contentSelector: '.pagination-content'});
+	```
+
+Also, it's just as easy to apply an endless-style pagination (like Google images or Twitter have) - instead of a page
+list you will get a more button and pages will be appended at the end, instead of replaced!
+
+There might be more to come ;-) If you have an idea for things that would fit nicely into widgets, let me know!
+
 ## Maintainer
 
 [Mateusz Uzdowski](mailto:mateusz@silverstripe.com)
@@ -14,7 +47,7 @@
 
 ## Changelog
 
-### Next
+### 0.2
 
 * Add PJAX support to AJAX fetches.
 * Redirect to error page on AJAX HTTP failure.
@@ -56,7 +89,6 @@ stack.
 
 If the speed (or server load) is of concern, it's easy to enable PJAX fetching. PJAX will ensure just the required
 snippet is rendered and server via JSON. See the [PJAX how-to](docs/pjax-how-to.md) for details.
-
 
 ### Including pagination metadata
 
