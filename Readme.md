@@ -49,6 +49,7 @@ There might be more to come ;-) If you have an idea for things that would fit ni
 
 ### 0.2
 
+* 3.1 support.
 * Add PJAX support to AJAX fetches.
 * Redirect to error page on AJAX HTTP failure.
 * Integration with the document.location - add pushState support.
