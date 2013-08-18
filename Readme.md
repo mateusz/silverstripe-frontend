@@ -62,7 +62,12 @@ There might be more to come ;-) If you have an idea for things that would fit ni
 
 ## Installation
 
-Use composer (add `"silverstripe/frontend": "*"` to "require" section of your `composer.json`, run `composer update`).
+Add following line to your `composer.json` and run `composer update`:
+
+	"mateusz/frontend": "*"
+	
+Note the package name has recently been changed from `silverstripe/frontend`, but both names should still work. The
+former is preferred for future compatibility.
 
 ## Features
 
