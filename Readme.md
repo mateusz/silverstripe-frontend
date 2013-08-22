@@ -96,6 +96,33 @@ stack.
 If the speed (or server load) is of concern, it's easy to enable PJAX fetching. PJAX will ensure just the required
 snippet is rendered and server via JSON. See the [PJAX how-to](docs/pjax-how-to.md) for details.
 
+### Pulling in the requirements
+
+jQuery and jQuery UI are required for this widget to run. This module does not supply these, usually you'd like to
+be able to choose your own version of jQuery so loading of these is up to you. However the two other requirements
+are provided by Framework and by the module, so you can just copy and paste these.
+
+Here is an example how this could be done via `Requirements` API in your `Controller`:
+
+```php
+public function init() {
+	parent::init();
+
+	// First, load jQuery - don't forget to update the paths!
+	Requirements::javascript('<your-script-path>/jquery-2.0.0.js');
+	Requirements::javascript('<your-script-path>//jquery-ui-1.10.3.custom.js');
+
+	// Second, load scripts for this module - order os important.
+	Requirements::javascript('framework/admin/javascript/lib.js');
+	Requirements::javascript('frontend/javascript/underscore.js');
+	Requirements::javascript('frontend/javascript/jquery.ss.pagination.js');
+	Requirements::javascript('frontend/javascript/jquery.ss.endless.js'); // choose one or both.
+
+	// Finally, pull in your custom code.
+	Requirements::javascript('<your-script-path>/your-script.js');
+}
+```
+
 ### Including pagination metadata
 
 The widget relies on the pagination metadata to be supplied during creation. This can be done via normal jQuery UI

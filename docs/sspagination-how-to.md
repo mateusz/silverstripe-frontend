@@ -3,6 +3,8 @@
 Here is a more comprehensive example of using sspagination - we assume we are attempting  to list all pages available on
 the site, paginated in the chunks of 5.
 
+Make sure your requirements are set - see the main readme's "Pulling in the requirements" for instructions.
+
 First of all, we need to provide the data - this is a job for the backend code. Here is an example of how `Page.php`
 might look like:
 
