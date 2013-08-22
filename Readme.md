@@ -216,7 +216,8 @@ A way to get around the verbosity if you want to update just a single template i
 ```
 
 To see all available templates for a widget and their default values, have a look at the top of the relevant source
-file.
+file. More information on working with underscore templates can be found in [underscore
+docs](http://underscorejs.org/#template).
 
 ### Options
 
