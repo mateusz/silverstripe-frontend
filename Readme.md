@@ -191,17 +191,32 @@ $('div.pagination').sspagination('destroy');
 
 ### Template customisation
 
-The widget DOM is built up from parametrised underscore.js templates. You can redefine them to get a custom layout:
+The widget DOM is built up from parametrised underscore.js templates. You can redefine them to get a custom layout.
+One thing to keep in mind is that you can't update just one template using the jQuery widget API - the whole object
+will get replaced, so make sure all templates are provided. You can customise them on initialisation, or later:
 
 ```js
 	$('div.pagination').sspagination({
 		templates: {
-			abbrev: '<li class="ss-pagination-abbrev my-custom-abbrev-class">…</li>'
+			// All templates need to be provided here
+			// ...
 		}
 	});
 ```
 
-To see available templates (and the defaults), have a look at the top of the source file.
+A way to get around the verbosity if you want to update just a single template is to extract the option out like this:
+
+```js
+	// Extract the templates
+	var templates = $('div.pagination').sspagination('option', 'templates');
+	// Update just one.
+	templates.main = '<div class="extra-div"><ul class="ss-pagination"><%= inside %></ul></div>';
+	// You need to reset it to trigger a refresh, otherwise the template will not update immediately.
+	$('div.pagination').sspagination({templates: templates});
+```
+
+To see all available templates for a widget and their default values, have a look at the top of the relevant source
+file.
 
 ### Options
 
