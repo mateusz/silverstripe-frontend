@@ -190,8 +190,9 @@
 		 * We are only interested in the content element, so we peel the rest
 		 * off via the contentSelector.
 		 */
-		_fetch: function(pageStart, fromPopstate = false) {
+		_fetch: function(pageStart, fromPopstate) {
 			var self = this;
+			fromPopstate = typeof fromPopstate!=='undefined' ? fromPopstate : false;
 
 			if (this._trigger('beforepagefetch')===false) return;
 
