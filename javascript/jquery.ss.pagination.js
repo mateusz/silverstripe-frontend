@@ -143,7 +143,7 @@
 			} else {
 				this.contentElement.html(content);
 			}
-		}
+		},
 
 		/**
 		 * Helper to extract the current page start from the url.
