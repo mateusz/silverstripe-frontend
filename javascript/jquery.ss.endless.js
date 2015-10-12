@@ -38,7 +38,11 @@
 		 * Append instead of replace. Do not add a history state - not meaningful in this case.
 		 */
 		_transition: function(pageStart, content) {
-			this.contentElement.append(content);
+			if(typeof this.options.transitionMethod == 'function') {
+				this.options.transitionMethod(pageStart, content, this.contentElement)
+			} else {
+				this.contentElement.append(content);
+			}
 		},
 
 		/**
@@ -56,7 +60,7 @@
 				if (typeof this.widgetEl==='undefined') {
 					// Create from template.
 					this.widgetEl = $(_.template(
-						this.options.templates.main, 
+						this.options.templates.main,
 						{nextPage: currentPage+1}
 					));
 					this.element.after(this.widgetEl);

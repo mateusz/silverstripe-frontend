@@ -18,6 +18,7 @@
 			context: null,
 			indicatorElement: null,
 			transitionMethod: 'replace',
+
 			templates: {
 				main:
 					'<ul class="ss-pagination"><%= inside %></ul>',
@@ -137,8 +138,12 @@
 		 * Perform page switch operation. The new content is represented by the "url".
 		 */
 		_transition: function(pageStart, content) {
-			this.contentElement.html(content);
-		},
+			if(typeof this.options.transitionMethod === "function") {
+				this.options.transitionMethod.call(pageStart, content, contentElement);
+			} else {
+				this.contentElement.html(content);
+			}
+		}
 
 		/**
 		 * Helper to extract the current page start from the url.
@@ -248,7 +253,7 @@
 			var halfContext = Math.floor(this.options.context / 2);
 			var rangeLeft = currentPage-halfContext;
 			var rangeRight = currentPage+halfContext;
-			
+
 			// Build the pages part.
 			var pageNumber;
 			var abbrevShown = false;
